@@ -1,7 +1,8 @@
 from src.chicken_disease_classification.constants import *
 from src.chicken_disease_classification.utils.common import read_yaml, create_directories
 from src.chicken_disease_classification.entity.config_entity import DataIngestionConfig
-
+from src.chicken_disease_classification.entity.config_entity import PrepareBaseModelConfig
+from src.chicken_disease_classification import logger
 class configManager:
     def __init__(self, config_file_path = CONFIG_FILE_PATH, params_file_path = PARAMS_FILE_PATH):
         self.config = read_yaml(config_file_path)
@@ -18,4 +19,25 @@ class configManager:
             unzip_dir=config.unzip_dir
         )
         return data_ingestion_config
+    
+    def prepare_base_model_config(self) -> PrepareBaseModelConfig:
+        config = self.config.prepare_base_model
+        params = self.params.prepare_base_model
+        print("we have created the folder")
+        
+        create_directories([config.root_dir])
+        logger.info(f"created the folder {config.root_dir}")
+
+        prepare_base_model_config = PrepareBaseModelConfig(
+            root_dir=Path(config.root_dir),
+            base_model_path=Path(config.base_model_path),
+            updated_base_model_path=Path(config.updated_base_model_path),
+            params_image_size=params.IMAGE_SIZE,    
+            params_weights=params.WEIGHTS,
+            params_classes=params.CLASSES,
+            params_learning_rate=params.LEARNING_RATE,
+            params_include_top=params.INCLUDE_TOP,
+        )
+        return prepare_base_model_config
+        
     
