@@ -1,0 +1,15 @@
+## the process we need to follow 
+1. Update the config.yaml file 
+2. Update the params.yaml file 
+3. Update the entity
+4. Update the configuration manager in src config
+5. Update the components
+6. Update the common utility functions in `src/chicken_disease_classification/utils/common.py` to enhance functionality and maintainability.
+7. Update the pipeline scripts in `src/chicken_disease_classification/pipeline/` to ensure they align with the new configurations and improve data flow.
+8. Update the main entry point in `src/chicken_disease_classification/main.py` to integrate the latest features and ensure proper execution of the pipeline.
+9. Update the DVC configuration files in the root directory to track new datasets and models, ensuring version control and reproducibility.
+10. Review and refactor the logging mechanisms in `src/chicken_disease_classification/utils/common.py` for better clarity and consistency.
+11. Ensure that all components in the pipeline are modular and can be easily tested and maintained.
+
+
+
