@@ -44,22 +44,17 @@ def read_yaml(file_path: Union[str, Path]) -> ConfigBox:
         raise e
 
 @ensure_annotations
-def save_json(path: Union[str, Path], data: Dict[str, Any]) -> None:
+def save_json(path: Union[str, Path], data: dict):
     """
-    Saves a dictionary to a JSON file.
-
+    Save json data
+    
     Args:
-        path (Union[str, Path]): The path to the JSON file to be saved.
-        data (Dict[str, Any]): The dictionary to be saved to the JSON file.
-
-    Logs:
-        - Information about the file being saved.
-        - Confirmation of successful saving of the file.
+        path (Union[str, Path]): path to json file
+        data (dict): data to be saved in json file
     """
-    logger.info(f"Saving JSON file to: {path}")
-    with open(path, 'w', encoding='utf-8') as file:
-        json.dump(data, file, indent=4)
-    logger.info(f"JSON file saved successfully at: {path}")
+    path = Path(path) if isinstance(path, str) else path
+    with open(path, "w") as f:
+        json.dump(data, f, indent=4)
 
 
 
