@@ -1,8 +1,8 @@
-from src.chicken_disease_classification.config.configuration import configManager
-from src.chicken_disease_classification.components.training import Training
-from src.chicken_disease_classification.components.prepare_callbacks import PrepareCallback
-from src.chicken_disease_classification.entity.config_entity import trainingconfig
-from src.chicken_disease_classification import logger
+from chicken_disease_classification.config.configuration import configManager
+from chicken_disease_classification.components.training import Training
+from chicken_disease_classification.components.prepare_callback import PrepareCallback
+from chicken_disease_classification.entity.config_entity import trainingconfig
+from chicken_disease_classification import logger
 
 
 STAGE_NAME = "Training"
@@ -14,7 +14,7 @@ class TrainingPipeline:
     def main(self):
         try:
             config = configManager()
-            prepare_callbacks_config = config.get_prepare_callback_config()
+            prepare_callbacks_config = config.get_prepare_callbacks_config()
             prepare_callbacks = PrepareCallback(config=prepare_callbacks_config)
             callback_list = prepare_callbacks.get_tb_ckpt_callbacks()
 

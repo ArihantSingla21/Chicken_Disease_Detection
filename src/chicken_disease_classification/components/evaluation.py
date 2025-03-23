@@ -1,8 +1,8 @@
 from urllib.parse import urlparse
 import tensorflow as tf
 from pathlib import Path
-from src.chicken_disease_classification.utils.common import save_json
-from src.chicken_disease_classification.entity.config_entity import ModelEvaluationConfig
+from chicken_disease_classification.utils.common import save_json
+from chicken_disease_classification.entity.config_entity import ModelEvaluationConfig
 
 class Evaluation:
     def __init__(self,config:ModelEvaluationConfig):
@@ -43,5 +43,5 @@ class Evaluation:
 
     def save_score(self):
         scores = {"loss": self.score[0], "accuracy": self.score[1]}
-        save_json(path="scores.json", data=scores)
+        save_json(path="score.json", data=scores)
         

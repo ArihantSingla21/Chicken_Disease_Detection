@@ -1,6 +1,6 @@
-from src.chicken_disease_classification.components.prepare_callback import PrepareCallback
-from src.chicken_disease_classification.config.configuration import configManager
-from src.chicken_disease_classification import logger
+from chicken_disease_classification.config.configuration import configManager
+from chicken_disease_classification.components.prepare_callback import PrepareCallback
+from chicken_disease_classification import logger
 
 STAGE_NAME = "Prepare Callbacks"
 

@@ -7,7 +7,7 @@ import tempfile
 import numpy as np
 import tensorflow as tf
 import time
-
+from src.chicken_disease_classification.entity.config_entity import PrepareCallbacksConfig
 
 class PrepareCallback:
     def __init__(self, config: PrepareCallbacksConfig):
