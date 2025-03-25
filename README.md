@@ -46,6 +46,8 @@ An end-to-end deep learning project that uses computer vision to classify chicke
 git clone https://github.com/ArihantSingla21/Chicken-Disease-Classification.git
 cd Chicken-Disease-Classification
 ```
+@Project Structure
+```
 Chicken-Disease-Classification/
 ├── config/
 │ └── config.yaml # Configuration settings
@@ -73,7 +75,7 @@ Chicken-Disease-Classification/
 ├── params.yaml # Model parameters
 ├── requirements.txt # Dependencies
 └── setup.py # Package setup
-
+```
 2. Create and activate virtual environment
 ```bash
 python -m venv venv
