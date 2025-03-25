@@ -17,3 +17,5 @@ scipy
 Flask
 Flask-Cors
 -e .
+pillow
+opencv-python-headless
