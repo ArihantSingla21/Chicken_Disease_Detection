@@ -1,8 +1,8 @@
-from chicken_disease_classification.config.configuration import configManager
-from chicken_disease_classification.components.training import Training
-from chicken_disease_classification.components.prepare_callback import PrepareCallback
-from chicken_disease_classification.entity.config_entity import trainingconfig
-from chicken_disease_classification import logger
+from src.chicken_disease_classification.config.configuration import configManager
+from src.chicken_disease_classification.components.training import Training
+from src.chicken_disease_classification.components.prepare_callback import PrepareCallback
+from src.chicken_disease_classification.entity.config_entity import trainingconfig
+from src.chicken_disease_classification import logger
 
 
 STAGE_NAME = "Training"

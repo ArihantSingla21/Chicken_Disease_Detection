@@ -1,6 +1,6 @@
-from chicken_disease_classification.config.configuration import configManager
-from chicken_disease_classification.components.evaluation import Evaluation
-from chicken_disease_classification import logger
+from src.chicken_disease_classification.components.evaluation import Evaluation
+from src.chicken_disease_classification.config.configuration import configManager
+from src.chicken_disease_classification import logger
 STAGE_NAME = "Model Evaluation"
 
 class ModelEvaluationPipeline:

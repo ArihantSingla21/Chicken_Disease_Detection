@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chicken Disease Classifier</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary: #2C3E50;
+            --secondary: #E74C3C;
+            --accent: #3498DB;
+            --light: #ECF0F1;
+            --dark: #2C3E50;
+            --success: #2ECC71;
+            --warning: #F1C40F;
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .upload-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .image-preview {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border: 2px dashed var(--accent);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .image-preview:hover {
+            border-color: var(--primary);
+        }
+
+        .image-preview img,
+        .image-preview video {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .upload-placeholder {
+            text-align: center;
+            color: #666;
+        }
+
+        .upload-placeholder i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-custom {
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-upload {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+
+        .btn-upload:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-predict {
+            background: var(--success);
+            color: white;
+            border: none;
+        }
+
+        .btn-predict:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .results-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .result-box {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .prediction-result {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .result-value {
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        .confidence-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin-top: 0.5rem;
+        }
+
+        .confidence-level {
+            height: 100%;
+            background: var(--success);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .error-message {
+            display: none;
+            padding: 1rem;
+            border-radius: 5px;
+            background: #fee2e2;
+            color: #dc2626;
+            margin-top: 1rem;
+        }
+
+        .success-message {
+            display: none;
+            padding: 1rem;
+            border-radius: 5px;
+            background: #dcfce7;
+            color: #16a34a;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h1>Chicken Disease Classifier</h1>
+            <p>Upload an image to detect potential diseases in chickens</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="upload-container">
+                    <div class="image-preview" id="dropZone">
+                        <video autoplay id="video" style="display: none;"></video>
+                        <img src="" id="photo" style="display: none;">
+                        <canvas id="canvas" style="display: none;"></canvas>
+                        <div class="upload-placeholder" id="placeholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag and drop an image or click to upload</p>
+                            <small class="text-muted">Supported formats: JPG, PNG</small>
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button type="button" class="btn-custom btn-upload" id="uload">
+                            <i class="fas fa-upload"></i> Upload Image
+                        </button>
+                        <button type="button" class="btn-custom btn-predict" id="send" disabled>
+                            <i class="fas fa-search"></i> Analyze
+                        </button>
+                    </div>
+                    <div class="error-message" id="errorMsg"></div>
+                    <div class="success-message" id="successMsg"></div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="results-container">
+                    <div class="results-header">
+                        <h4>Analysis Results</h4>
+                    </div>
+                    <div class="result-box">
+                        <div class="res-part2"></div>
+                        <div class="prediction-result" id="predictionResult">
+                            <div class="result-item">
+                                <span class="result-label">Disease:</span>
+                                <span class="result-value" id="diseaseName">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Confidence:</span>
+                                <span class="result-value" id="confidenceValue">-</span>
+                            </div>
+                            <div class="confidence-bar">
+                                <div class="confidence-level" id="confidenceBar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <input type="file" id="fileinput" accept="image/*" style="display: none;">
+    <input type="hidden" id="url" value="../predict">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            const dropZone = document.getElementById('dropZone');
+            const placeholder = document.getElementById('placeholder');
+            const photo = document.getElementById('photo');
+            const video = document.getElementById('video');
+            const sendBtn = document.getElementById('send');
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            let base_data = "";
+
+            function showError(message) {
+                errorMsg.textContent = message;
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+            }
+
+            function showSuccess(message) {
+                successMsg.textContent = message;
+                successMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+            }
+
+            function updatePredictionResult(prediction, confidence) {
+                document.getElementById('diseaseName').textContent = prediction;
+                document.getElementById('confidenceValue').textContent = `${confidence}%`;
+                document.getElementById('confidenceBar').style.width = `${confidence}%`;
+                document.getElementById('predictionResult').style.display = 'block';
+            }
+
+            function sendRequest(base64Data) {
+                if(!base64Data) {
+                    showError('No image selected');
+                    return;
+                }
+
+                $("#loading").fadeIn();
+                $.ajax({
+                    url: $("#url").val(),
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify({image: base64Data}),
+                    success: function(response) {
+                        if(response.status === 'success') {
+                            updatePredictionResult(response.prediction, response.confidence);
+                            showSuccess('Analysis completed successfully');
+                        } else {
+                            showError(response.message || 'Analysis failed');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        showError('Error analyzing image: ' + error);
+                    },
+                    complete: function() {
+                        $("#loading").fadeOut();
+                    }
+                });
+            }
+
+            // File handling
+            function handleFile(file) {
+                if (!file.type.startsWith('image/')) {
+                    showError('Please select an image file');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('CANVAS');
+                        const ctx = canvas.getContext('2d');
+                        canvas.height = this.height;
+                        canvas.width = this.width;
+                        ctx.drawImage(this, 0, 0);
+                        base_data = canvas.toDataURL('image/jpeg', 1.0).replace(/^data:image.+;base64,/, '');
+                        
+                        photo.src = e.target.result;
+                        photo.style.display = 'block';
+                        video.style.display = 'none';
+                        placeholder.style.display = 'none';
+                        sendBtn.disabled = false;
+                        
+                        showSuccess('Image uploaded successfully');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // Event Listeners
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = "var(--accent)";
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.style.borderColor = '#dee2e6';
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = '#dee2e6';
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            $('#uload').click(() => $('#fileinput').click());
+            
+            $('#fileinput').change(function() {
+                if (this.files && this.files[0]) {
+                    handleFile(this.files[0]);
+                }
+            });
+
+            $('#send').click(() => sendRequest(base_data));
+        });
+    </script>
+</body>
+</html>
